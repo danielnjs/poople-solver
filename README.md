@@ -154,38 +154,4 @@ The delivered application is one file: `poople-solver.html`. Its main functions 
 | `runSolve()` | Validate the form, assemble the dictionary, and coordinate solving. |
 | `renderRoute()` | Display the selected path and route controls. |
 | `showError()` | Report a problem and remove stale results. |
-
-The original development workspace also contains these supporting files; they are not needed to open the delivered HTML:
-
-```text
-work/
-  page.html          HTML/CSS/JavaScript template with a dictionary placeholder
-  dictionary.json    Extracted words and the source game's recorded move counts
-  build.cjs          Embeds the words into the template
-  test.cjs           Algorithm and static-file verification
-outputs/
-  poople-solver.html  Standalone application
-  Readme.md          This documentation
-```
-
-From that workspace's root, with Node.js installed:
-
-```sh
-node work/build.cjs
-node work/test.cjs
-```
-
-The build verifies that the extracted dictionary contains 2,398 unique entries, replaces the template's dictionary placeholder, and writes the standalone HTML. Running the build overwrites the generated HTML, so development edits belong in `work/page.html`. Neither command downloads data.
-
-## Verification performed
-
-The automated checks passed for the delivered solver:
-
-- Parsed the embedded JavaScript to check syntax.
-- Independently built a graph by comparing every pair of dictionary words, then checked all 2,398 neighbor sets against the solver's substitution-based generator.
-- Computed distances with that independent graph and matched all 2,398 against the source game's recorded minimum move counts.
-- Checked representative returned routes for correct endpoints, dictionary membership, exactly one changed letter per move, minimum length, and duplicate routes.
-- Checked zero-move completion, unknown starts, excluded targets, disconnected dictionaries, custom words, exclusions, and malformed dictionary entries.
-- Checked the HTML for external runtime dependencies and confirmed its connection-blocking policy.
-
 Browser visual and interaction verification was not completed because the in-app browser's URL policy blocked local-file previews. The optional browser tool integration was also not verified in a supporting browser. The algorithm checks above run in Node.js and do not establish browser layout or clipboard behavior.
