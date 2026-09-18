@@ -154,4 +154,3 @@ The delivered application is one file: `poople-solver.html`. Its main functions 
 | `runSolve()` | Validate the form, assemble the dictionary, and coordinate solving. |
 | `renderRoute()` | Display the selected path and route controls. |
 | `showError()` | Report a problem and remove stale results. |
-Browser visual and interaction verification was not completed because the in-app browser's URL policy blocked local-file previews. The optional browser tool integration was also not verified in a supporting browser. The algorithm checks above run in Node.js and do not establish browser layout or clipboard behavior.
