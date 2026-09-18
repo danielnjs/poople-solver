@@ -1,150 +1,852 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="An offline Poople solver. Find the shortest word ladder from any four-letter word to POOP.">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Poople Solver · One letter at a time</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d6559'/%3E%3Ctext x='8' y='24' font-family='Arial' font-size='24' font-weight='bold' fill='white'%3EP%3C/text%3E%3C/svg%3E">
-<style>
-:root{color-scheme:light;--ink:#172d35;--muted:#576a72;--line:#d8e2e5;--green:#096753;--mint:#d6f4dd;--paper:#f4f7f8;--white:#fff}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.55}button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.45}button,input,textarea,summary,a{outline-offset:5px}button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #258674}header{max-width:1160px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:30px 32px;border-bottom:1px solid var(--line)}.brand{font-size:23px;letter-spacing:-1px;font-weight:850;display:flex;align-items:center;gap:12px}.brandmark{background:var(--ink);color:white;width:36px;height:36px;display:grid;place-items:center;border-radius:9px;font-size:24px;letter-spacing:0}.badge{border:1px solid #bbd4ce;border-radius:30px;padding:6px 12px;color:var(--green);font-size:13px;font-weight:650}.badge::before{content:'✓';margin-right:6px}main{max-width:1160px;margin:0 auto;padding:44px 32px 24px;display:grid;grid-template-columns:minmax(270px,.9fr) minmax(350px,1.1fr);gap:64px}.eyebrow{font-size:12px;font-weight:750;letter-spacing:2px;text-transform:uppercase;color:var(--green)}h1{font-size:clamp(36px,5vw,55px);letter-spacing:-2.5px;line-height:1.05;margin:14px 0 18px;font-weight:800}h1 em{color:var(--green);font-style:normal}.intro{color:var(--muted);max-width:370px;margin:0 0 30px;font-size:17px}.field-label{display:block;font-size:14px;font-weight:750;margin-bottom:9px}.start-group{display:flex;gap:12px;align-items:stretch}.start{width:100%;min-width:0;height:68px;border:2px solid #a6b9c0;border-radius:10px;background:var(--white);font-family:ui-monospace,Consolas,monospace;font-size:31px;font-weight:700;letter-spacing:10px;padding:10px 18px;text-transform:uppercase}.start[aria-invalid=true]{border-color:#bd3737}.destination{background:var(--ink);color:white;border-radius:10px;padding:9px 19px;display:flex;flex-direction:column;justify-content:center}.destination small{font-size:11px;letter-spacing:1px;color:#bfd0d5}.destination strong{font:700 24px ui-monospace,Consolas,monospace;letter-spacing:4px}.primary{margin-top:14px;border:0;background:var(--green);color:white;width:100%;border-radius:10px;padding:15px 20px;display:flex;justify-content:space-between;font-weight:700}.primary:hover{background:#074e40}.examples{display:flex;gap:8px;flex-wrap:wrap;align-items:center;color:var(--muted);font-size:13px;margin-top:16px}.example{border:1px solid var(--line);background:white;border-radius:5px;font-size:12px;padding:4px 8px;letter-spacing:1px;font-weight:650;color:var(--ink)}.example:hover{border-color:var(--green)}.error{color:#a52b2b;margin:10px 0 0;font-size:14px;min-height:22px}.settings{border-top:1px solid var(--line);margin-top:20px;padding-top:20px}summary{cursor:pointer;font-size:14px;font-weight:700}details p{color:var(--muted);font-size:14px}textarea{width:100%;resize:vertical;min-height:75px;border:1px solid #b0c0c6;border-radius:7px;padding:10px;font-size:14px;background:white;text-transform:uppercase}.setting-field{margin-top:15px}.setting-field label{font-size:13px;font-weight:650;display:block;margin-bottom:5px}.small{font-size:13px;color:var(--muted)}.text-button{border:0;background:none;color:var(--green);padding:5px 0;text-decoration:underline;text-underline-offset:3px;font-size:13px}.rules{margin-top:25px;padding:17px 18px;border-left:3px solid #b3cec6;background:#eaf0f1}.rules strong{font-size:14px}.rules p{font-size:14px;color:var(--muted);margin:5px 0 0}.result{background:white;border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 30px #172d3506;overflow:hidden;align-self:start}.result-head{padding:24px 26px 20px;border-bottom:1px solid var(--line);display:flex;gap:10px;justify-content:space-between;align-items:center}.result-head h2{font-size:20px;letter-spacing:-.5px;margin:0}.result-head p{font-size:13px;color:var(--muted);margin:3px 0 0}.moves{background:var(--mint);color:var(--green);font-size:13px;font-weight:750;border-radius:25px;padding:7px 12px;white-space:nowrap}.ladder{list-style:none;padding:23px 26px 0;margin:0}.rung{display:flex;gap:20px;align-items:center;position:relative;padding-bottom:22px}.rung:not(:last-child)::after{content:'';position:absolute;top:54px;left:111px;height:22px;border-left:2px dashed #cbdad8}.step{font-size:12px;font-weight:600;color:var(--muted);width:26px;flex-shrink:0;text-align:center;font-variant-numeric:tabular-nums}.tiles{display:flex;gap:6px}.tile{width:48px;height:54px;display:grid;place-items:center;border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;font:750 26px ui-monospace,Consolas,monospace;background:#f5f7f8}.tile.changed{background:var(--mint);color:var(--green);border-color:#8dcc9c}.rung:last-child .tile{background:var(--green);color:white;border-color:#054838}.rung:first-child:not(:last-child) .tile{background:#eaf0f3;border-color:#cbd8df}.change{font-size:12px;color:var(--muted);white-space:nowrap}.change b{font-size:14px;color:var(--green)}.result-bottom{background:#fafcfc;padding:18px 26px;border-top:1px solid var(--line)}.route-control{display:flex;align-items:center;justify-content:space-between;gap:12px}.route-control p{margin:0;font-size:13px;color:var(--muted)}.nav{display:flex;gap:6px}.secondary{border:1px solid #c6d5d9;background:white;color:var(--ink);border-radius:7px;padding:7px 12px;font-size:14px;font-weight:600}.secondary:hover:not(:disabled){background:#edf5f1}.copy{width:100%;margin-top:14px}.legend{font-size:12px;color:var(--muted);margin:14px 0 0;text-align:center}.legend span{display:inline-block;width:10px;height:10px;background:var(--mint);border:1px solid #8dcc9c;border-radius:2px;margin-right:5px}.empty{padding:40px 28px;color:var(--muted)}footer{max-width:1160px;margin:20px auto 0;padding:20px 32px 30px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:20px}footer a{color:var(--green)}footer details{max-width:720px}footer summary{font-size:12px;font-weight:500}footer p{font-size:12px}.copy-manual{margin-top:12px;text-transform:none;min-height:90px}[hidden]{display:none!important}@media(max-width:880px){main{gap:30px;padding-top:30px}.tile{width:39px;height:48px;font-size:23px}.rung{gap:12px}.rung:not(:last-child)::after{top:48px;left:95px}.result-head,.result-bottom{padding-left:20px;padding-right:20px}.ladder{padding-left:20px;padding-right:20px}}@media(max-width:700px){header{padding:20px}.brand{font-size:21px}main{display:block;padding:26px 20px;max-width:530px}h1{font-size:42px}.intro{margin-bottom:22px}.result{margin-top:28px}.tile{width:46px;height:50px}.rung{gap:16px}.rung:not(:last-child)::after{top:50px;left:105px}.rules{margin-top:20px}footer{margin-top:0;padding:20px;display:block}footer>span{display:block;margin-top:10px}}@media(max-width:360px){.tile{width:36px;height:44px}.tiles{gap:4px}.rung{gap:10px}.rung:not(:last-child)::after{top:44px;left:86px}.badge{font-size:11px}.destination{padding:9px 12px}.start{letter-spacing:5px}.change{font-size:11px}}
-</style>
-</head>
-<body>
-<header><div class="brand"><span class="brandmark" aria-hidden="true">P</span>poople solver</div><span class="badge">Works offline</span></header>
-<main>
-<section aria-labelledby="title">
-<div class="eyebrow">One letter. Every move.</div>
-<h1 id="title">All roads lead<br>to <em>POOP.</em></h1>
-<p class="intro">Enter your starting word. Find the shortest way to the finish.</p>
-<form id="solve-form" novalidate>
-<label class="field-label" for="start">Starting word</label>
-<div class="start-group"><input id="start" class="start" value="BARN" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="error" aria-invalid="false"><div class="destination" aria-label="Target: POOP"><small>TARGET</small><strong>POOP</strong></div></div>
-<button class="primary" type="submit"><span>Find shortest path</span><span aria-hidden="true">→</span></button>
-<div class="examples">Try a word <button class="example" type="button" data-word="BARN">BARN</button><button class="example" type="button" data-word="COLD">COLD</button><button class="example" type="button" data-word="FART">FART</button></div>
-<p class="error" id="error" role="alert"></p>
-<details class="settings"><summary>Adjust the word list</summary>
-<p>Using <span id="word-count">2,398</span> words. If your version of the game accepts different words, adjust them here, then solve again.</p>
-<div class="setting-field"><label for="added">Additional accepted words</label><textarea id="added" rows="2" placeholder="One word per line, or separated by commas" spellcheck="false"></textarea></div>
-<div class="setting-field"><label for="excluded">Words to avoid</label><textarea id="excluded" rows="2" placeholder="Words your game rejects" spellcheck="false"></textarea></div>
-<p class="small">Use four-letter A–Z words. Exclusions take priority. Changes last until you close or reload this page.</p>
-<button class="text-button" id="reset" type="button">Restore original word list</button>
-</details>
-</form>
-<div class="rules"><strong>The rule is simple.</strong><p>Change exactly one letter per move. Every step must be a valid four-letter word. Finish at POOP.</p></div>
-</section>
-<section class="result" aria-label="Solution">
-<div class="result-head"><div><h2 id="result-title">Your shortest path</h2><p id="result-subtitle" role="status" aria-live="polite"></p></div><span class="moves" id="moves"></span></div>
-<div id="empty" class="empty" hidden></div>
-<ol id="ladder" class="ladder" aria-label="Word ladder"></ol>
-<div class="result-bottom" id="result-bottom"><div class="route-control"><p id="route-label"></p><div class="nav"><button type="button" class="secondary" id="prev" aria-label="Previous shortest route">←</button><button type="button" class="secondary" id="next" aria-label="Next shortest route">→</button></div></div><button type="button" class="secondary copy" id="copy">Copy this path</button><textarea class="copy-manual" id="copy-manual" readonly aria-label="Path to copy manually" hidden></textarea><p class="legend"><span aria-hidden="true"></span>Highlighted letters change from the previous word.</p></div>
-</section>
-</main>
-<footer><details><summary>Dictionary &amp; how it works</summary><p>The embedded 2,398-word list is a snapshot of the publicly served <a href="https://poople.io/" target="_blank" rel="noopener noreferrer">poople.io</a> game dictionary, retrieved September 18, 2026. This independent solver is not affiliated with Poople. The live game may update its list.</p><p>Breadth-first search guarantees the fewest moves within the selected word list. Up to 100 equally short routes are shown. Everything runs on your device; no internet, installation, or account is needed. The source link above is optional and requires internet.</p></details><span>One HTML file. Zero requests.</span></footer>
-<noscript>This solver needs JavaScript enabled in your browser. It does not need an internet connection.</noscript>
-<script>
-'use strict';
-const BASE_WORDS = 'POOP BOOP COOP POOF PROP POOR LOOP POMP PLOP GOOP POOL HOOP LOON HOOK LOOM ROMP FLOP WOOF PREP LOOT HOOT PLAP DOOR CROP COMP CLOP COUP CHOP POLL GOOD WOOL GOOF MOOR GLOP LOOK HOOD TOOL HOOF PLOW PLOY PROS PLOT PROM FOOL PUMP COOT DROP COOS PROW COOL COOK SLOP GOON BOOT BOOS BOOR ROOF PROD POME BOON BOOM PLOD BOOK POUR PIMP PROF BOOB PROG RUMP FOUL FOUR LOST LOCK PLAT PLAN JUMP CLOY FLOW BOPS POPE PLAY CLOT PREZ CHOW PREY PALL DRIP YOUR COME TOLL PILL SOON COMB CLOG COMA BOAS BOAR MOOS GROG MOOT STOP MOON HONK SLOW BROW BUMP GOAD BROS CONS GROW RAMP CONK BOYS FLOE FLOG LION BOBS GOLD LOUT GOLF DOME LOUR NOON PEEP COGS CLAP DOUR CHAP FLIP FOOT CLIP HUMP CHIP FLAP BORN PORE COWS DOER GLOB ROLL COWL BOAT SIMP PULL LOLL KOOK SLIP SOOT BOCK DOLL PULP SLAP COPS NOOB EROS BOSS TOME NOOK WOLF PUMA TOUR FOOD FOWL COAT BLOB BODS PRIM PRIG WOOD FROG TOOT CROW COAL DOOM HOST BOLT PRAM FROM FOIL HOCK COIL BOLL BOTS WOOS FOAL CROC POLE CAMP GOWN HOLD SUMP COBS GLOM GLOW BLOW TOOK BLOT LOFT BOUT POSE CORK POKE TOON BOMB PLED CRAP LIMP ROOT HOUR HOED SLOE SLOB COCK LOIN LOAM LUMP SHOP SOUP COST SOME MOOD LOAN DUMP BONK SLOG SLOT MOOK WIMP SOUR CLOD CODS BOGS POLO POLY COLT HOLT ZOOT ZOOS COTS ROOD TROD BOWS TOIL ZOOM POUT ROOM HOME ROOK TRIP TOCK COVE TRIM ROIL SOFT BEDS PHAT HOGS HALL BILL SLAG SLAB DOTE SCOW FOND FOLD CHIC PONS DYER CHIA LEFT DORK GROK DORM RAMI STOW PONY BEEP RAMS MILL BUDS DOSE NOUN ROID HEST SAME JOCK CHIT ROLE FLIT CHIN HANK SOIL DOVE CUBS PORK PORN BUGS HALT WRAP SLAM POPS SLAW SLAT DOTS FONT SOGS BEGS JOBS SLAY TAIL TOED PIED POSY DOWN POST WISP TALL FORD POTS BRAT FORE BRAS SLED GLIB PORT EMOS FOPS BAAS POSH KOAN LISP LIST LACK CRAM TROT LOAD HOMO CRAG LOAF PEAT CRAB JOGS WOAD ROPE SOMA DOZE HONE HOLE TAME FORK SNIP DILL HOLM FORT LULL RASP SLEW DEER SOLD DEEP SOLE HOLY TAMP CRAY BACK SOLO CRAW DIME LUMA SONS JOIN HICK LOCI LOCH BULL MULL LOCO SLID TOLE TOLD BELT PILE BITS DRAM SLIM BELL HOPE BREW SPOT BUMS HONS CABS TOKE PIKE LOBS GORE BOBO TOMS PEES PEER SNOB CYST IONS ATOP BUNK BOBA TONE SNOG MOBS SKIP ROTS TONK SLIT CULT BRIS ROSE GOSS MOAN HOPS BRIM CULL MOAT PEED BRIG CADS BAGS TOMB PEEL LAIN SOPS PEEN JOKE CREW PEEK HOSS LUST PIPE LOGS PRAT BODE SMOG MODS TOPS SPUR PRAY HORN MUON FILL NULL SNOW VAMP GOUT SNOT TONS SORE MOCK WOES JOLT SWAP SORT HOSE LEST ROUT COAX BODY PION ERAS GILL DUMB TORE NOCK BURP TORN BURN RILL FRAG COCA SOUL PUJA PYRE TORT VOLE TORR DELL BALL BLAT WALL HOTS CUPS DULL NEON CODE BLAB CODA NOBS FLUE GILD LAMP ROWS HECK TOTE BUTS DOCK COED SOWN HUCK SHIP WOKE GLUM TOTS BETS SOWS PULA BANK EGOS VOLT BOIL NODS MALL PUKE TOSS HOWL CLAW CALL WOMB JOSS CLAN CLAM HUED CLAD DOES SEEP HILL BLEW CAMI HILT WOKS CAME CUTS GRAD SILL GRAM BLED ERGS RIOT TOUT HEED CLAY POCK LICK DOGE SLUG MOLT COIN POCO BOLO SLUR TILL PUPA FOAM COIF DOGS BOLD CAMS LOPE BOLA CAMO BARN JOTS BIAS FULL TOWS BUYS TOWN LAST CANS MOLD MOLE BASS MONS LIEN BONY BIBS GULF DAME POET SHOD SHOE GULL SHOO GULP LORE PERP BONG COKE YOKE PURL SHOW BONE SHOT BOND PURE BATS LOPS WHAP TIME STEP PODS MOMS BLIP BRUT PAIL TOYS GELD JOWL COLE MONK FOBS COLD GREW GREY CAPS COLA DAMP HACK LOSS MOPS POGO CARP ROAD TRAD ROAR BIDS TRAP PALI ROAN TRAM ROAM PALE RUMS HELD PALM GOBS PALS CAST WORD BORA WORE VLOG LIFT GOAL MOPE CONN ELAN LOSE WORK GOAT CONE WORN JOYS FAIL HEMP CATS ROCK CHAW LEAN LEAM FLAB CHAT CHAR CLIT FLAG FLAK HUMS DOMS NOPE CHAI FLAN FOGS GODS FLAT HOAR FALL FLAW FLAX FLAY BORE ALOE LOTS DOLE ROBS COPY GRIM HULL MORE LOUD GRIP DOLT HEME MORN KILL VOWS COPE CORE CORD BLOC BAYS SOBS ERRS WHIP LUCK TELL ZONK WOWS BOTH DONE SUMO CAWS KEEP MOSS MOST HUNK BEAT RODS BEAR SOAR SOAP SUMS DONS GOER CORN HOBS LOWS PLEA BLOG PARE COTE FLED FLEE OOPS CHEW COSY SODS CIGS EONS WEEP HOES HOER FLEW MOWS MOWN COSH YORE DOPE SOCK BUCK GLAD SNAP GLAM LIMB LIMA BECK LIME NOSE TOAD WILL GALL BUBS LIMO BOWL LIMN PICK LEGS DAWN NEAR LIPA FARE NEAT SAKE HALF HALE MUDS YEAR FART HALO LIPO LINT DYES SERE RUTS MUCK WEFT JAGS PIES PIER BLUE DAYS TOES HAND LIRA HANG LIRE FATS TURN DUAL SALE LIPS SPIT WIPE SALT SETS DAZE BLUR NECK FAST CEDE HAMS PIGS GONG DUBS RIAL LACY SEWS WISE LITE WISH SEWN GIBS DUCK WACK WIST HAPS SANE LABS GUYS WIRE SANK MUGS NEED LACE COZY SANS JAIL RIAD GONE DUDS PEAS PEAR PEAL HARE LIVE HARK HARP JETS DUEL HART LENT DUES SNIT WELL LADS TUTS RIBS WELD WADS SAPS JESS WITS PEAK JEST WELT PECS ETAS LAGS MULE SASS BULK GORY GIFT BULB HATS SATE GOSH SHAG AEON WAGS LEPT RIDS ROPY CACA DYNE EGGS HASP RIEL PECK JAMS RIGS ROSY WAIL BUNT BUNS CITE ROTE ATOM CRED TONG BUNG PINE SAVE PINS NITS NABS RIFT EMUS SHAM MUMS SHAW SHAT MOAI GIGS HAUL LAID CELL GOTH LAIR REAR CAFE SAWN PEGS ROUX MODE WEST SPUD ROVE DUKE WAKE SAWS SPUN TIDE SHED FUEL PIPS LETS SWAB CAGE YELL WERE HAWK SWAG GEAR READ SWAT HAWS SWAN SWAM REAM LESS TICK SWAY VOID BURY FLUX GILT BURS BURR SAYS LANK BURL TORI RILE CRIB BURG BURB WALK WETS LAMB LAMA BUST WALE LAME TIED FLUB BUSK NAGS DULY SNUG BUTT SNUB SUBS PELT DOCS LAPS SHIN PITS SHIM REDS GEEK CAKE DUNE RIME PISH MUSS GEES RIMA MUST DUNK WANK NAIL REED PACE TOSH RIMS REEL HUBS PACK REEK CALM GRAY TEAT TEAR CALF RIPE LARK KIDS PEND NETS WARD WARE SUDS HUES PENT PENS SHIV KICK PADS SHIT DUPE SUCK GRAB JAWS ERGO GRAN REGS TEAM TEAL NEST YAMS TILE CANE GABS WASP DUST WHAM SLUM LATS TILT HUGS PEPS WARP SUED LASH VIDS PAGE WARN NAME SWIM PEON JAYS GIRD LASS SUES VIED CANT GIRL OUTS CAPO VOTE GELS MONO PERK TINE CAPE NAPE FOCI OOHS NAPS PERT PERM TINK RADS TINS GIST OUST HYPE FUND LAUD PAID WHAT YANK FUNK RISE RACK PAIN TEED TEES TEEN PAIR CARS CARE CARD CARB PETS TRAY FOES BIDE TIPS YAPS CASK SUIT CASH CASE LAWN LAWS PEST CYAN CART KILO KILN VILE KILT WAYS PANE TIRE DIAL MOSH PANS JUGS TABS GAIN HOAX HULA MIEN GRID GAGS FURL WHEW LAYS YARN HULK GRIN GRIT GNAT RAGS SUNS ZONE DICE PAPA DICK PAPS SHUT CAVE WHIR TITS WHIT WHIM KEEN SOAK KEEL HUNG DONG BEAU RAID BEAN BEAM HUNT RAIN MOTH TACK BEAK RAIL VEER PEWS VEES DIBS MOTE SUNK BEAD SOBA GALS SUPS DIED JUKE PARP YAWS PARK TENS MIKE GAME DIES PART PARS CHEF EAST MEAN KEGS WHIZ GALA MEAT REST GALE TEMP MOVE EARN GETS EARS BIKE SODA DOSH TRIO MEDS HUSK PATE RANK MIME DIGS BOXY PATS LUGS GAOL FIAT BILK MEEK ALUM BILE GAMS BIND HURL FOLK NAYS CUBE BEET BEES BEER MILD MILE SOFA IRIS SURE DORY BEEN PASS PAST BEEF EATS TAGS MILK PAVE TERN VELD BINS RAPS BOZO KEMP BRAN GLEE SUSS BRAG JUNK DEAR HUTS DEAN DEAL FIBS GAPS NUBS KELP MINK KITS TALE TALC RARE TALK CUED PHEW GASP BRAY FORA XRAY JURE TAKE LYRE CLUE PAWS YUCK TEST DECK LYSE DIKE CUES SOLS RATS DIMS TANK JUST FIGS TANS WOAH MISS MIST DINE RASH FORM RASE BITE MIRE PAYS BRED KNAP DEEM DEED PUCE MELT TAPE PUCK DRAB DEFT FEAR FEAT DRAG MEME TAPS SICK BADE LOBE BEND JUTS SKEW PUBE OOZE PUBS SONG MELD VAIN NUKE VETS TARE FECK TART VALE TARP GAYS SKID BENT DIRE SKIM SKIN FILE DIRK LURE DRAT DRAW LODE KALE RAWS BRIE VEST THAT SIFT FEEL CUMS LOGO INNS TATS THAW FEES DABS PUGS MAIL VANS FIND MAIN DELI LURK MAGS FILM SKIS SKIT PLUG RAYS PLUM NUMB BAIL LUSH FEED HEAD ZITS HEAP HEAR HEAT DADS DIVE DELT SEAM MESS FRAT DREW BALK BALE BLAM BALD TAUT BLAH BETA MERE PHON RUBS BEST RUED NOES GUFF GLUE FIRE GLUG RUES DENS BALM SEAT PYRO SEAR FRAY NODE BANG BANE BAND CURT CURS MALE CURL HIKE CURE CURD MALT VATS FIST HEEL RUGS JIGS SMUG FREE CUSS MEWS SCAG KNOB SEED SCAB SEER LONE SCAM BANS SEEM SEEN SEEK LONG FELL STAG VAST STAB GLUT KHAN STAT SILK STAR JOSH SILT ZAGS CUTE SILO STAY LICH GYRE JEAN TUCK WICK FEND FITS NUTS SCAT SEES HINT BARK PUNK FELT SCAR KNOW AIDS DALE HEFT FADS KNOT BARE LIBS BARF PUNS BARD BARB MAPS TUBS PUNY WONT TYKE LICE SINS THIN DAMN POEM LIES BASK BASH LIEU BASE LORD MAST MASS RULE BARS LIFE MARE HIPS ZEST DANK PUPS BATH LIDS STEM BLIN STEW STET CZAR DAMS BAST LIED SIPS HISS FAIN FAIR MAUL TUGS GUNK JEER SACK LOTH WIGS NONE HELL HELM PURR SIRE MATS WORT GUMS WORM PUSH LEAK FEST HEMS ZAPS NICK BAWL LEAP ROCS LOVE WEAN MAWS WEAR RODE TYRE DAPS HELP HITS PUTS STIM ROBE DARN SPAR NIBS DARK RUNS DARE SPAM SITS SPAY SELL SPAT SADS LEAF LEAD HAGS DRUM SAGE ROES NORM SPED SAGS HENS HAFT SAFE WOVE DATE FAME LIKE GOES FLEA RUST NOSY LEES WEED LEER GUTS HERD SAID POND HERE WEES DYED NOTE LINE SAIL LINK FLEX WEEK PONG TUNE FANS WILD WILE LILT SNAG SPEW JABS GUST WILT NOSH RUSE OATS WEDS WILY LEEK HAIL JACK BUBO HUSH PATH GANT NEAP RAND LUGE OPTS DRYS JIVE PICS RANG RANT FARM REVS YEAS YEAH KISS WIND SERF IBIS WINE EASY SIZE WINK SERA MUCH LUFF HURT SURF GANG VEIN WINS EYES MINX MINT WHOM AXON TERM FATE VITE BUFF MUFF TURF TURD RAPT WEIR MEET SPIN EAVE KITE VISE GAPE GLEN EYED MINI IRKS MIND AIRS MINE DEAF DEAD STUB FAVE VIVE DEBT VEND GASH IAMB NINE JERK STUD GRUB STUN VENT SANG SAND NILS BIRD CLUB GARB NUDE CUFF PAWN TUSH WIRY DECO HEWN HEWS GARS FAUX TUSK ZEAL TANG OILY RATE HARD LEND SCUM HARM MACE NIPS BABE MISO LENS RIDE DING DUCT FIFE WADE AUNT TUTU LADY GATE WITH JURY DUDE FAWN HEYS RICH KEPT RICE WAGE MYTH SASH FAZE TEXT DEFY HATE ZINE GIFS GAWK RIFE APED RIFF ARID BYTE VERS VERT SHAH GIGA MEMO DUET LUNG DINK LUNE DINO GAVE SARS MITE DINT WEND JAMB HASH WAFT OINK EGGY KERN MADE RAVE MITT YIPS OOZY WENT VETO HAVE PINA TARS JAPE WAIF MAGE PINK MAGI PING ZIPS PINT WAIT SICS GHEE BUOY ANDS HIDE DIPS MEND WRIT INKS SIDE CITY KNEW WEPT TICS WHYS REAP NAES DISS THAN VANE MAID FEET DREG JARL BAHT WUSS SHEA LUTE JARS FINE MAIM PUFF BERM TASK UNIT GAZE DADA DIRT BERG FOXY LAKE BAIT CENT REAL YELP DISH RAZE YULE DISK PLUS MESA TIES RECS TIER HAZE BAKE LAND HEAL MESH MAKE LANE DIVA KEYS REDO MUSH SEAL MUSE FINK RUBE SHES BUSY FINS NUNS KNIT TIDY MERC BUSH RUBY PITA GINS PACT EELS PITH RIND MAMA NOEL MUTT NERD RINK DENY DAFT DUOS VASE DENT PITY VIBE FIRM META SEAS RUDE MUSK LEWD WAND METH WANE DUNG METE REEF GEEZ VIAL WANT GYMS THEN KART OAFS PISS MUTE CURB MOJO TEAS LARD FACT CUSP SCAD YAKS FRET SCAN RIPS FADE SMUT SUCH SECS FIRS SECT RUFF REFS MANE QUIT MANO YURT DAIS FISH TEAK VICE FACE OURS LATE FEMS DESK FUME VIER HUGE DUSK VIES VIEW RUIN GYRO FIVE OAKS TUBE WARS WART SWIG TUBA SING SINE WARM PUNT HUFF SINK SUET AIDE WASH THIS WARY REIN DEUS YEWS RACY LAVA HEIR LAVE TING MASH RITE TWIN MASK WAVE AKIN ANON HIRE CLEF NEXT TSAR LYES MICE TINT DEVS FENS YANG RISK DANG MARK NEWT AWAY ZETA FUNS MART DUTY MARS NEWS RACE WIDE TEEM PUSS GENS DEWS BAUD WHEN GUNS JEEZ YARD GAGA SACS GAGE WHEE RUNG RAFT FERN RUNE TYPE RENT CRUD GEMS TUFF MATE TINY MICS BIER MATH GIVE ITEM SIRS VEAL GENE PESO WIFE GAFF YOLK FUSE LAZE SULK FETA FUSS PANG REPS WEAK HIVE WEAL PANT LAZY DYAD BYES DART PUTT SITE WHET SPAS SELF RAGE SPAN STIR WHEY PUTZ RUNT FURS FAKE FURY NICE RAGU GNAW FESS KINS DRUG VINE NAVE SHUN DASH SAGA CIEL FANG MAZE SPEC MEAD GAIT SEND FEUD LUBE AILS DATA KINE KIND WEBS OARS GERM KINK TREE TACT SUNG SENT TACO TEND HAIR HERB EASE AIMS TENT RUTH TUNA DIET JADE HERO SWUM HERS OATH GUSH MEAL LILY ADDS ERST RAKE YAWL YAWN EARL RUSK RUSH ODDS JAVA SESH ZING APES MIDI PHIS AXED RAFF ZINC AVID ALMS THEY RENO GYNO RING ARIA ELSE QUID OPUS VARY FUZE JIFF NARY VERY EAUX IDEM WING SARI AWLS WAVY TUFT KERB DOJO THEE THUS VERA VERB VEIL THEM WINO APEX DEWY EVES TWEE ARKS WHOA AWED CRUX OWLY FETE NADA REPO MEGA AMID AGED ACED KNEE KATA TYPO WAXY MANA VISA OPES JINX QUIP AIRY INKY ANTS QUIZ RHEA KETO MENU MANY AERO EXES ZERO ANEW TREK FAVA RAZZ ONLY ARMS MAYO NANO NAVY ANUS VINY NAFF DEBE VINO ABED KAVA ACID UNIS MAXI TRUE CHUB KING DISC VIVA OFFS EWES OILS TWIG LEVA BABY TWIT TIFF TWAS ENDS HAZY MECH MACH RITZ MAKO MICA JIBE WATT AWRY OAKY EKED WREN OUCH APTS MAZY EDGY EKES DEMO NARC AXEL TWOS NANA ALAS ARMY ASKS ALES ABET KAKA AHEM AREA JAZZ ONUS ICED ZANY EDGE THUG EACH ALBS OWED CHUM THUD CHUG ICKY KANA IDES ELMS EXEC TECH OWES TAXI EVEN AXES AFRO AVES EVER ACTS ANTE PSIS OWLS AGES ACES ACER EDDY IDEA AGEE LEVY VEGA QUAD GNUS AWNS ODES ONES DITZ APPS ARTS FUZZ OPEN ALPS ORES DODO AWES ANTI AGRO ARCS EWER ARCH OWNS BUZZ ORBS ELFS BEVY JIZZ ABUT UREA OMEN FIZZ ICER AGUE ICES ASPS ELKS OWER OVER AMPS TAXA ELMY ETCH ALBA OVEN ORCS OXEN QUAY AVER AXIS ITCH OXER ORCA IMPS ALGA AMEN ARGH UMPS UMPH INCH AUGH'.split(' ');
-const $ = id => document.getElementById(id);
-const CAP = 100;
-let routes = [], routeIndex = 0, truncated = false, activeWords = new Set(BASE_WORDS);
-function parseWords(text) {
-  const tokens = text.trim().toUpperCase().split(/[\s,;]+/).filter(Boolean);
-  const bad = tokens.find(w => !/^[A-Z]{4}$/.test(w));
-  if (bad) throw new Error('Word list entries must each contain exactly four letters A–Z.');
-  return tokens;
-}
-function neighbors(word, words) {
-  const found = [];
-  for (let i = 0; i < 4; i++) for (let n = 65; n <= 90; n++) {
-    const letter = String.fromCharCode(n);
-    if (letter === word[i]) continue;
-    const candidate = word.slice(0, i) + letter + word.slice(i + 1);
-    if (words.has(candidate)) found.push(candidate);
-  }
-  return found;
-}
-function solveLadder(start, words, cap = CAP) {
-  if (!words.has(start)) throw new Error(start + ' is not in the selected word list. Check the spelling or add it under “Adjust the word list”.');
-  if (!words.has('POOP')) throw new Error('POOP is excluded. Remove it from “Words to avoid” to solve.');
-  const distance = new Map([['POOP', 0]]), queue = ['POOP'];
-  for (let head = 0; head < queue.length; head++) {
-    const word = queue[head];
-    for (const next of neighbors(word, words)) if (!distance.has(next)) {
-      distance.set(next, distance.get(word) + 1); queue.push(next);
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description"
+    content="An offline Poople solver. Find the shortest word ladder from any four-letter word to POOP.">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Poople Solver · One letter at a time</title>
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230d6559'/%3E%3Ctext x='8' y='24' font-family='Arial' font-size='24' font-weight='bold' fill='white'%3EP%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172d35;
+      --muted: #576a72;
+      --line: #d8e2e5;
+      --green: #096753;
+      --mint: #d6f4dd;
+      --paper: #f4f7f8;
+      --white: #fff
     }
-  }
-  if (!distance.has(start)) return {paths: [], truncated: false};
-  const paths = [], path = [start];
-  // Every descent reduces distance, so there are no cycles.
-  // An explicit stack also handles unusually long user-supplied ladders.
-  const stack = [{word: start, choices: null, index: 0}];
-  while (stack.length && paths.length <= cap) {
-    const frame = stack[stack.length - 1];
-    if (frame.word === 'POOP') {paths.push([...path]); stack.pop(); path.pop(); continue;}
-    if (!frame.choices) frame.choices = neighbors(frame.word, words).filter(w => distance.get(w) === distance.get(frame.word) - 1);
-    if (frame.index >= frame.choices.length) {stack.pop(); path.pop(); continue;}
-    const next = frame.choices[frame.index++]; path.push(next); stack.push({word: next, choices: null, index: 0});
-  }
-  return {paths: paths.slice(0, cap), truncated: paths.length > cap};
-}
-function showError(message, invalidStart = false) {
-  $('error').textContent = message; $('start').setAttribute('aria-invalid', String(invalidStart));
-  routes = []; $('ladder').replaceChildren(); $('result-bottom').hidden = true; $('moves').hidden = true;
-  $('empty').hidden = false; $('empty').textContent = 'Adjust the starting word or word list, then try again.';
-  $('result-title').textContent = 'No solution to show'; $('result-subtitle').textContent = 'Check the message beside the input.';
-}
-function renderRoute() {
-  const path = routes[routeIndex];
-  $('ladder').replaceChildren(); $('empty').hidden = true; $('moves').hidden = false; $('result-bottom').hidden = false;
-  $('result-title').textContent = path.length === 1 ? 'Already at the finish!' : 'Your shortest path';
-  $('result-subtitle').textContent = path[0] + ' → POOP · Fewest moves in this word list';
-  $('moves').textContent = (path.length - 1) + (path.length === 2 ? ' move' : ' moves');
-  path.forEach((word, i) => {
-    const row = document.createElement('li'); row.className = 'rung';
-    const index = document.createElement('span'); index.className = 'step'; index.textContent = String(i).padStart(2, '0'); index.setAttribute('aria-hidden', 'true');
-    const tiles = document.createElement('span'); tiles.className = 'tiles'; tiles.setAttribute('aria-hidden', 'true');
-    let changed = -1;
-    [...word].forEach((letter, j) => {const tile = document.createElement('span'); tile.className = 'tile'; if (i && letter !== path[i-1][j]) {tile.classList.add('changed'); changed = j;} tile.textContent = letter; tiles.append(tile);});
-    const note = document.createElement('span'); note.className = 'change'; note.setAttribute('aria-hidden', 'true');
-    if (changed >= 0) {const mark = document.createElement('b'); mark.textContent = path[i-1][changed] + ' → ' + word[changed]; note.append(mark);}
-    else note.textContent = path.length === 1 ? 'Finish' : 'Start';
-    row.setAttribute('aria-label', (i ? 'Move ' + i : 'Start') + ': ' + word + (changed >= 0 ? '. Letter ' + (changed+1) + ': ' + path[i-1][changed] + ' changes to ' + word[changed] : ''));
-    row.append(index, tiles, note); $('ladder').append(row);
-  });
-  $('route-label').textContent = 'Route ' + (routeIndex+1) + ' of ' + routes.length + (truncated ? ' shown (more exist)' : routes.length === 1 ? '' : ' shortest routes');
-  $('prev').disabled = routeIndex === 0; $('next').disabled = routeIndex === routes.length - 1;
-  $('copy').textContent = 'Copy this path'; $('copy-manual').hidden = true;
-}
-function runSolve() {
-  $('error').textContent = ''; $('start').setAttribute('aria-invalid', 'false');
-  const start = $('start').value.trim().toUpperCase(); $('start').value = start;
-  if (!/^[A-Z]{4}$/.test(start)) {showError('Enter exactly four letters A–Z, such as BARN.', true); return;}
-  try {
-    const words = new Set([...BASE_WORDS, ...parseWords($('added').value)]);
-    parseWords($('excluded').value).forEach(word => words.delete(word));
-    activeWords = words; $('word-count').textContent = words.size.toLocaleString();
-    const result = solveLadder(start, words);
-    if (!result.paths.length) {showError('No route from ' + start + ' to POOP exists in the selected word list. Try removing exclusions or adding accepted words.'); return;}
-    routes = result.paths; truncated = result.truncated; routeIndex = 0; renderRoute();
-  } catch (error) {showError(error.message);}
-}
-$('solve-form').addEventListener('submit', event => {event.preventDefault(); runSolve();});
-document.querySelectorAll('[data-word]').forEach(button => button.addEventListener('click', () => {$('start').value = button.dataset.word; runSolve();}));
-$('prev').addEventListener('click', () => {if(routeIndex > 0) {routeIndex--; renderRoute();}});
-$('next').addEventListener('click', () => {if(routeIndex < routes.length - 1) {routeIndex++; renderRoute();}});
-$('reset').addEventListener('click', () => {$('added').value = ''; $('excluded').value = ''; runSolve();});
-$('copy').addEventListener('click', async () => {
-  if (!routes.length) return;
-  const text = routes[routeIndex].join(' → ');
-  try {if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable'); await navigator.clipboard.writeText(text); $('copy').textContent = 'Copied!';}
-  catch {const field = $('copy-manual'); field.value = text; field.hidden = false; field.focus(); field.select(); $('copy').textContent = 'Select and copy the path below';}
-});
-runSolve();
-if (document.modelContext?.registerTool) {
-  try {Promise.resolve(document.modelContext.registerTool({name:'solve_poople',description:'Show shortest routes from a four-letter word to POOP using the page’s selected dictionary.',inputSchema:{type:'object',properties:{start:{type:'string',pattern:'^[A-Za-z]{4}$'}},required:['start'],additionalProperties:false},annotations:{readOnlyHint:false},execute(input){if(!input || typeof input.start !== 'string' || !/^[a-z]{4}$/i.test(input.start)) throw new Error('Provide a four-letter start word.'); $('start').value=input.start; runSolve(); return {paths:routes,moves:routes.length ? routes[0].length-1 : null,error:$('error').textContent};}})).catch(()=>{});} catch {}
-}
-</script>
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.55
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    button:disabled {
+      cursor: default;
+      opacity: .45
+    }
+
+    button,
+    input,
+    textarea,
+    summary,
+    a {
+      outline-offset: 5px
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    summary:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #258674
+    }
+
+    header {
+      max-width: 1160px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 30px 32px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .brand {
+      font-size: 23px;
+      letter-spacing: -1px;
+      font-weight: 850;
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .brandmark {
+      background: var(--ink);
+      color: white;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      font-size: 24px;
+      letter-spacing: 0
+    }
+
+    .badge {
+      border: 1px solid #bbd4ce;
+      border-radius: 30px;
+      padding: 6px 12px;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 650
+    }
+
+    .badge::before {
+      content: '✓';
+      margin-right: 6px
+    }
+
+    main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 44px 32px 24px;
+      display: grid;
+      grid-template-columns: minmax(270px, .9fr) minmax(350px, 1.1fr);
+      gap: 64px
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--green)
+    }
+
+    h1 {
+      font-size: clamp(36px, 5vw, 55px);
+      letter-spacing: -2.5px;
+      line-height: 1.05;
+      margin: 14px 0 18px;
+      font-weight: 800
+    }
+
+    h1 em {
+      color: var(--green);
+      font-style: normal
+    }
+
+    .intro {
+      color: var(--muted);
+      max-width: 370px;
+      margin: 0 0 30px;
+      font-size: 17px
+    }
+
+    .field-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 750;
+      margin-bottom: 9px
+    }
+
+    .start-group {
+      display: flex;
+      gap: 12px;
+      align-items: stretch
+    }
+
+    .start {
+      width: 100%;
+      min-width: 0;
+      height: 68px;
+      border: 2px solid #a6b9c0;
+      border-radius: 10px;
+      background: var(--white);
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 31px;
+      font-weight: 700;
+      letter-spacing: 10px;
+      padding: 10px 18px;
+      text-transform: uppercase
+    }
+
+    .start[aria-invalid=true] {
+      border-color: #bd3737
+    }
+
+    .destination {
+      background: var(--ink);
+      color: white;
+      border-radius: 10px;
+      padding: 9px 19px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center
+    }
+
+    .destination small {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #bfd0d5
+    }
+
+    .destination strong {
+      font: 700 24px ui-monospace, Consolas, monospace;
+      letter-spacing: 4px
+    }
+
+    .primary {
+      margin-top: 14px;
+      border: 0;
+      background: var(--green);
+      color: white;
+      width: 100%;
+      border-radius: 10px;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700
+    }
+
+    .primary:hover {
+      background: #074e40
+    }
+
+    .examples {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 16px
+    }
+
+    .example {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 5px;
+      font-size: 12px;
+      padding: 4px 8px;
+      letter-spacing: 1px;
+      font-weight: 650;
+      color: var(--ink)
+    }
+
+    .example:hover {
+      border-color: var(--green)
+    }
+
+    .error {
+      color: #a52b2b;
+      margin: 10px 0 0;
+      font-size: 14px;
+      min-height: 22px
+    }
+
+    .settings {
+      border-top: 1px solid var(--line);
+      margin-top: 20px;
+      padding-top: 20px
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700
+    }
+
+    details p {
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    textarea {
+      width: 100%;
+      resize: vertical;
+      min-height: 75px;
+      border: 1px solid #b0c0c6;
+      border-radius: 7px;
+      padding: 10px;
+      font-size: 14px;
+      background: white;
+      text-transform: uppercase
+    }
+
+    .setting-field {
+      margin-top: 15px
+    }
+
+    .setting-field label {
+      font-size: 13px;
+      font-weight: 650;
+      display: block;
+      margin-bottom: 5px
+    }
+
+    .small {
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .text-button {
+      border: 0;
+      background: none;
+      color: var(--green);
+      padding: 5px 0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-size: 13px
+    }
+
+    .rules {
+      margin-top: 25px;
+      padding: 17px 18px;
+      border-left: 3px solid #b3cec6;
+      background: #eaf0f1
+    }
+
+    .rules strong {
+      font-size: 14px
+    }
+
+    .rules p {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 5px 0 0
+    }
+
+    .result {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 8px 30px #172d3506;
+      overflow: hidden;
+      align-self: start
+    }
+
+    .result-head {
+      padding: 24px 26px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .result-head h2 {
+      font-size: 20px;
+      letter-spacing: -.5px;
+      margin: 0
+    }
+
+    .result-head p {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 3px 0 0
+    }
+
+    .moves {
+      background: var(--mint);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 750;
+      border-radius: 25px;
+      padding: 7px 12px;
+      white-space: nowrap
+    }
+
+    .ladder {
+      list-style: none;
+      padding: 23px 26px 0;
+      margin: 0
+    }
+
+    .rung {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      position: relative;
+      padding-bottom: 22px
+    }
+
+    .rung:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 54px;
+      left: 111px;
+      height: 22px;
+      border-left: 2px dashed #cbdad8
+    }
+
+    .step {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      width: 26px;
+      flex-shrink: 0;
+      text-align: center;
+      font-variant-numeric: tabular-nums
+    }
+
+    .tiles {
+      display: flex;
+      gap: 6px
+    }
+
+    .tile {
+      width: 48px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-bottom-width: 3px;
+      border-radius: 6px;
+      font: 750 26px ui-monospace, Consolas, monospace;
+      background: #f5f7f8
+    }
+
+    .tile.changed {
+      background: var(--mint);
+      color: var(--green);
+      border-color: #8dcc9c
+    }
+
+    .rung:last-child .tile {
+      background: var(--green);
+      color: white;
+      border-color: #054838
+    }
+
+    .rung:first-child:not(:last-child) .tile {
+      background: #eaf0f3;
+      border-color: #cbd8df
+    }
+
+    .change {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap
+    }
+
+    .change b {
+      font-size: 14px;
+      color: var(--green)
+    }
+
+    .result-bottom {
+      background: #fafcfc;
+      padding: 18px 26px;
+      border-top: 1px solid var(--line)
+    }
+
+    .route-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .route-control p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .nav {
+      display: flex;
+      gap: 6px
+    }
+
+    .secondary {
+      border: 1px solid #c6d5d9;
+      background: white;
+      color: var(--ink);
+      border-radius: 7px;
+      padding: 7px 12px;
+      font-size: 14px;
+      font-weight: 600
+    }
+
+    .secondary:hover:not(:disabled) {
+      background: #edf5f1
+    }
+
+    .copy {
+      width: 100%;
+      margin-top: 14px
+    }
+
+    .legend {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 14px 0 0;
+      text-align: center
+    }
+
+    .legend span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--mint);
+      border: 1px solid #8dcc9c;
+      border-radius: 2px;
+      margin-right: 5px
+    }
+
+    .empty {
+      padding: 40px 28px;
+      color: var(--muted)
+    }
+
+    footer {
+      max-width: 1160px;
+      margin: 20px auto 0;
+      padding: 20px 32px 30px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px
+    }
+
+    footer a {
+      color: var(--green)
+    }
+
+    footer details {
+      max-width: 720px
+    }
+
+    footer summary {
+      font-size: 12px;
+      font-weight: 500
+    }
+
+    footer p {
+      font-size: 12px
+    }
+
+    .copy-manual {
+      margin-top: 12px;
+      text-transform: none;
+      min-height: 90px
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    @media(max-width:880px) {
+      main {
+        gap: 30px;
+        padding-top: 30px
+      }
+
+      .tile {
+        width: 39px;
+        height: 48px;
+        font-size: 23px
+      }
+
+      .rung {
+        gap: 12px
+      }
+
+      .rung:not(:last-child)::after {
+        top: 48px;
+        left: 95px
+      }
+
+      .result-head,
+      .result-bottom {
+        padding-left: 20px;
+        padding-right: 20px
+      }
+
+      .ladder {
+        padding-left: 20px;
+        padding-right: 20px
+      }
+    }
+
+    @media(max-width:700px) {
+      header {
+        padding: 20px
+      }
+
+      .brand {
+        font-size: 21px
+      }
+
+      main {
+        display: block;
+        padding: 26px 20px;
+        max-width: 530px
+      }
+
+      h1 {
+        font-size: 42px
+      }
+
+      .intro {
+        margin-bottom: 22px
+      }
+
+      .result {
+        margin-top: 28px
+      }
+
+      .tile {
+        width: 46px;
+        height: 50px
+      }
+
+      .rung {
+        gap: 16px
+      }
+
+      .rung:not(:last-child)::after {
+        top: 50px;
+        left: 105px
+      }
+
+      .rules {
+        margin-top: 20px
+      }
+
+      footer {
+        margin-top: 0;
+        padding: 20px;
+        display: block
+      }
+
+      footer>span {
+        display: block;
+        margin-top: 10px
+      }
+    }
+
+    @media(max-width:360px) {
+      .tile {
+        width: 36px;
+        height: 44px
+      }
+
+      .tiles {
+        gap: 4px
+      }
+
+      .rung {
+        gap: 10px
+      }
+
+      .rung:not(:last-child)::after {
+        top: 44px;
+        left: 86px
+      }
+
+      .badge {
+        font-size: 11px
+      }
+
+      .destination {
+        padding: 9px 12px
+      }
+
+      .start {
+        letter-spacing: 5px
+      }
+
+      .change {
+        font-size: 11px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="brand"><span class="brandmark" aria-hidden="true">P</span>poople solver</div><span class="badge">Works
+      offline</span>
+  </header>
+  <main>
+    <section aria-labelledby="title">
+      <div class="eyebrow">One letter. Every move.</div>
+      <h1 id="title">All roads lead<br>to <em>POOP.</em></h1>
+      <p class="intro">Enter your starting word. Find the shortest way to the finish.</p>
+      <form id="solve-form" novalidate>
+        <label class="field-label" for="start">Starting word</label>
+        <div class="start-group"><input id="start" class="start" value="BARN" maxlength="4" autocomplete="off"
+            autocapitalize="characters" spellcheck="false" aria-describedby="error" aria-invalid="false">
+          <div class="destination" aria-label="Target: POOP"><small>TARGET</small><strong>POOP</strong></div>
+        </div>
+        <button class="primary" type="submit"><span>Find shortest path</span><span aria-hidden="true">→</span></button>
+        <div class="examples">Try a word <button class="example" type="button" data-word="BARN">BARN</button><button
+            class="example" type="button" data-word="COLD">COLD</button><button class="example" type="button"
+            data-word="FART">FART</button></div>
+        <p class="error" id="error" role="alert"></p>
+        <details class="settings">
+          <summary>Adjust the word list</summary>
+          <p>Using <span id="word-count">2,398</span> words. If your version of the game accepts different words, adjust
+            them here, then solve again.</p>
+          <div class="setting-field"><label for="added">Additional accepted words</label><textarea id="added" rows="2"
+              placeholder="One word per line, or separated by commas" spellcheck="false"></textarea></div>
+          <div class="setting-field"><label for="excluded">Words to avoid</label><textarea id="excluded" rows="2"
+              placeholder="Words your game rejects" spellcheck="false"></textarea></div>
+          <p class="small">Use four-letter A–Z words. Exclusions take priority. Changes last until you close or reload
+            this page.</p>
+          <button class="text-button" id="reset" type="button">Restore original word list</button>
+        </details>
+      </form>
+      <div class="rules"><strong>The rule is simple.</strong>
+        <p>Change exactly one letter per move. Every step must be a valid four-letter word. Finish at POOP.</p>
+      </div>
+    </section>
+    <section class="result" aria-label="Solution">
+      <div class="result-head">
+        <div>
+          <h2 id="result-title">Your shortest path</h2>
+          <p id="result-subtitle" role="status" aria-live="polite"></p>
+        </div><span class="moves" id="moves"></span>
+      </div>
+      <div id="empty" class="empty" hidden></div>
+      <ol id="ladder" class="ladder" aria-label="Word ladder"></ol>
+      <div class="result-bottom" id="result-bottom">
+        <div class="route-control">
+          <p id="route-label"></p>
+          <div class="nav"><button type="button" class="secondary" id="prev"
+              aria-label="Previous shortest route">←</button><button type="button" class="secondary" id="next"
+              aria-label="Next shortest route">→</button></div>
+        </div><button type="button" class="secondary copy" id="copy">Copy this path</button><textarea
+          class="copy-manual" id="copy-manual" readonly aria-label="Path to copy manually" hidden></textarea>
+        <p class="legend"><span aria-hidden="true"></span>Highlighted letters change from the previous word.</p>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <details>
+      <summary>Dictionary &amp; how it works</summary>
+      <p>The embedded 2,398-word list is a snapshot of the publicly served <a href="https://poople.io/" target="_blank"
+          rel="noopener noreferrer">poople.io</a> game dictionary, retrieved September 18, 2026. This independent solver
+        is not affiliated with Poople. The live game may update its list.</p>
+      <p>Breadth-first search guarantees the fewest moves within the selected word list. Up to 100 equally short routes
+        are shown. Everything runs on your device; no internet, installation, or account is needed. The source link
+        above is optional and requires internet.</p>
+    </details><span>One HTML file. Zero requests.</span>
+  </footer>
+  <noscript>This solver needs JavaScript enabled in your browser. It does not need an internet connection.</noscript>
+  <script>
+    'use strict';
+    const BASE_WORDS = 'POOP BOOP COOP POOF PROP POOR LOOP POMP PLOP GOOP POOL HOOP LOON HOOK LOOM ROMP FLOP WOOF PREP LOOT HOOT PLAP DOOR CROP COMP CLOP COUP CHOP POLL GOOD WOOL GOOF MOOR GLOP LOOK HOOD TOOL HOOF PLOW PLOY PROS PLOT PROM FOOL PUMP COOT DROP COOS PROW COOL COOK SLOP GOON BOOT BOOS BOOR ROOF PROD POME BOON BOOM PLOD BOOK POUR PIMP PROF BOOB PROG RUMP FOUL FOUR LOST LOCK PLAT PLAN JUMP CLOY FLOW BOPS POPE PLAY CLOT PREZ CHOW PREY PALL DRIP YOUR COME TOLL PILL SOON COMB CLOG COMA BOAS BOAR MOOS GROG MOOT STOP MOON HONK SLOW BROW BUMP GOAD BROS CONS GROW RAMP CONK BOYS FLOE FLOG LION BOBS GOLD LOUT GOLF DOME LOUR NOON PEEP COGS CLAP DOUR CHAP FLIP FOOT CLIP HUMP CHIP FLAP BORN PORE COWS DOER GLOB ROLL COWL BOAT SIMP PULL LOLL KOOK SLIP SOOT BOCK DOLL PULP SLAP COPS NOOB EROS BOSS TOME NOOK WOLF PUMA TOUR FOOD FOWL COAT BLOB BODS PRIM PRIG WOOD FROG TOOT CROW COAL DOOM HOST BOLT PRAM FROM FOIL HOCK COIL BOLL BOTS WOOS FOAL CROC POLE CAMP GOWN HOLD SUMP COBS GLOM GLOW BLOW TOOK BLOT LOFT BOUT POSE CORK POKE TOON BOMB PLED CRAP LIMP ROOT HOUR HOED SLOE SLOB COCK LOIN LOAM LUMP SHOP SOUP COST SOME MOOD LOAN DUMP BONK SLOG SLOT MOOK WIMP SOUR CLOD CODS BOGS POLO POLY COLT HOLT ZOOT ZOOS COTS ROOD TROD BOWS TOIL ZOOM POUT ROOM HOME ROOK TRIP TOCK COVE TRIM ROIL SOFT BEDS PHAT HOGS HALL BILL SLAG SLAB DOTE SCOW FOND FOLD CHIC PONS DYER CHIA LEFT DORK GROK DORM RAMI STOW PONY BEEP RAMS MILL BUDS DOSE NOUN ROID HEST SAME JOCK CHIT ROLE FLIT CHIN HANK SOIL DOVE CUBS PORK PORN BUGS HALT WRAP SLAM POPS SLAW SLAT DOTS FONT SOGS BEGS JOBS SLAY TAIL TOED PIED POSY DOWN POST WISP TALL FORD POTS BRAT FORE BRAS SLED GLIB PORT EMOS FOPS BAAS POSH KOAN LISP LIST LACK CRAM TROT LOAD HOMO CRAG LOAF PEAT CRAB JOGS WOAD ROPE SOMA DOZE HONE HOLE TAME FORK SNIP DILL HOLM FORT LULL RASP SLEW DEER SOLD DEEP SOLE HOLY TAMP CRAY BACK SOLO CRAW DIME LUMA SONS JOIN HICK LOCI LOCH BULL MULL LOCO SLID TOLE TOLD BELT PILE BITS DRAM SLIM BELL HOPE BREW SPOT BUMS HONS CABS TOKE PIKE LOBS GORE BOBO TOMS PEES PEER SNOB CYST IONS ATOP BUNK BOBA TONE SNOG MOBS SKIP ROTS TONK SLIT CULT BRIS ROSE GOSS MOAN HOPS BRIM CULL MOAT PEED BRIG CADS BAGS TOMB PEEL LAIN SOPS PEEN JOKE CREW PEEK HOSS LUST PIPE LOGS PRAT BODE SMOG MODS TOPS SPUR PRAY HORN MUON FILL NULL SNOW VAMP GOUT SNOT TONS SORE MOCK WOES JOLT SWAP SORT HOSE LEST ROUT COAX BODY PION ERAS GILL DUMB TORE NOCK BURP TORN BURN RILL FRAG COCA SOUL PUJA PYRE TORT VOLE TORR DELL BALL BLAT WALL HOTS CUPS DULL NEON CODE BLAB CODA NOBS FLUE GILD LAMP ROWS HECK TOTE BUTS DOCK COED SOWN HUCK SHIP WOKE GLUM TOTS BETS SOWS PULA BANK EGOS VOLT BOIL NODS MALL PUKE TOSS HOWL CLAW CALL WOMB JOSS CLAN CLAM HUED CLAD DOES SEEP HILL BLEW CAMI HILT WOKS CAME CUTS GRAD SILL GRAM BLED ERGS RIOT TOUT HEED CLAY POCK LICK DOGE SLUG MOLT COIN POCO BOLO SLUR TILL PUPA FOAM COIF DOGS BOLD CAMS LOPE BOLA CAMO BARN JOTS BIAS FULL TOWS BUYS TOWN LAST CANS MOLD MOLE BASS MONS LIEN BONY BIBS GULF DAME POET SHOD SHOE GULL SHOO GULP LORE PERP BONG COKE YOKE PURL SHOW BONE SHOT BOND PURE BATS LOPS WHAP TIME STEP PODS MOMS BLIP BRUT PAIL TOYS GELD JOWL COLE MONK FOBS COLD GREW GREY CAPS COLA DAMP HACK LOSS MOPS POGO CARP ROAD TRAD ROAR BIDS TRAP PALI ROAN TRAM ROAM PALE RUMS HELD PALM GOBS PALS CAST WORD BORA WORE VLOG LIFT GOAL MOPE CONN ELAN LOSE WORK GOAT CONE WORN JOYS FAIL HEMP CATS ROCK CHAW LEAN LEAM FLAB CHAT CHAR CLIT FLAG FLAK HUMS DOMS NOPE CHAI FLAN FOGS GODS FLAT HOAR FALL FLAW FLAX FLAY BORE ALOE LOTS DOLE ROBS COPY GRIM HULL MORE LOUD GRIP DOLT HEME MORN KILL VOWS COPE CORE CORD BLOC BAYS SOBS ERRS WHIP LUCK TELL ZONK WOWS BOTH DONE SUMO CAWS KEEP MOSS MOST HUNK BEAT RODS BEAR SOAR SOAP SUMS DONS GOER CORN HOBS LOWS PLEA BLOG PARE COTE FLED FLEE OOPS CHEW COSY SODS CIGS EONS WEEP HOES HOER FLEW MOWS MOWN COSH YORE DOPE SOCK BUCK GLAD SNAP GLAM LIMB LIMA BECK LIME NOSE TOAD WILL GALL BUBS LIMO BOWL LIMN PICK LEGS DAWN NEAR LIPA FARE NEAT SAKE HALF HALE MUDS YEAR FART HALO LIPO LINT DYES SERE RUTS MUCK WEFT JAGS PIES PIER BLUE DAYS TOES HAND LIRA HANG LIRE FATS TURN DUAL SALE LIPS SPIT WIPE SALT SETS DAZE BLUR NECK FAST CEDE HAMS PIGS GONG DUBS RIAL LACY SEWS WISE LITE WISH SEWN GIBS DUCK WACK WIST HAPS SANE LABS GUYS WIRE SANK MUGS NEED LACE COZY SANS JAIL RIAD GONE DUDS PEAS PEAR PEAL HARE LIVE HARK HARP JETS DUEL HART LENT DUES SNIT WELL LADS TUTS RIBS WELD WADS SAPS JESS WITS PEAK JEST WELT PECS ETAS LAGS MULE SASS BULK GORY GIFT BULB HATS SATE GOSH SHAG AEON WAGS LEPT RIDS ROPY CACA DYNE EGGS HASP RIEL PECK JAMS RIGS ROSY WAIL BUNT BUNS CITE ROTE ATOM CRED TONG BUNG PINE SAVE PINS NITS NABS RIFT EMUS SHAM MUMS SHAW SHAT MOAI GIGS HAUL LAID CELL GOTH LAIR REAR CAFE SAWN PEGS ROUX MODE WEST SPUD ROVE DUKE WAKE SAWS SPUN TIDE SHED FUEL PIPS LETS SWAB CAGE YELL WERE HAWK SWAG GEAR READ SWAT HAWS SWAN SWAM REAM LESS TICK SWAY VOID BURY FLUX GILT BURS BURR SAYS LANK BURL TORI RILE CRIB BURG BURB WALK WETS LAMB LAMA BUST WALE LAME TIED FLUB BUSK NAGS DULY SNUG BUTT SNUB SUBS PELT DOCS LAPS SHIN PITS SHIM REDS GEEK CAKE DUNE RIME PISH MUSS GEES RIMA MUST DUNK WANK NAIL REED PACE TOSH RIMS REEL HUBS PACK REEK CALM GRAY TEAT TEAR CALF RIPE LARK KIDS PEND NETS WARD WARE SUDS HUES PENT PENS SHIV KICK PADS SHIT DUPE SUCK GRAB JAWS ERGO GRAN REGS TEAM TEAL NEST YAMS TILE CANE GABS WASP DUST WHAM SLUM LATS TILT HUGS PEPS WARP SUED LASH VIDS PAGE WARN NAME SWIM PEON JAYS GIRD LASS SUES VIED CANT GIRL OUTS CAPO VOTE GELS MONO PERK TINE CAPE NAPE FOCI OOHS NAPS PERT PERM TINK RADS TINS GIST OUST HYPE FUND LAUD PAID WHAT YANK FUNK RISE RACK PAIN TEED TEES TEEN PAIR CARS CARE CARD CARB PETS TRAY FOES BIDE TIPS YAPS CASK SUIT CASH CASE LAWN LAWS PEST CYAN CART KILO KILN VILE KILT WAYS PANE TIRE DIAL MOSH PANS JUGS TABS GAIN HOAX HULA MIEN GRID GAGS FURL WHEW LAYS YARN HULK GRIN GRIT GNAT RAGS SUNS ZONE DICE PAPA DICK PAPS SHUT CAVE WHIR TITS WHIT WHIM KEEN SOAK KEEL HUNG DONG BEAU RAID BEAN BEAM HUNT RAIN MOTH TACK BEAK RAIL VEER PEWS VEES DIBS MOTE SUNK BEAD SOBA GALS SUPS DIED JUKE PARP YAWS PARK TENS MIKE GAME DIES PART PARS CHEF EAST MEAN KEGS WHIZ GALA MEAT REST GALE TEMP MOVE EARN GETS EARS BIKE SODA DOSH TRIO MEDS HUSK PATE RANK MIME DIGS BOXY PATS LUGS GAOL FIAT BILK MEEK ALUM BILE GAMS BIND HURL FOLK NAYS CUBE BEET BEES BEER MILD MILE SOFA IRIS SURE DORY BEEN PASS PAST BEEF EATS TAGS MILK PAVE TERN VELD BINS RAPS BOZO KEMP BRAN GLEE SUSS BRAG JUNK DEAR HUTS DEAN DEAL FIBS GAPS NUBS KELP MINK KITS TALE TALC RARE TALK CUED PHEW GASP BRAY FORA XRAY JURE TAKE LYRE CLUE PAWS YUCK TEST DECK LYSE DIKE CUES SOLS RATS DIMS TANK JUST FIGS TANS WOAH MISS MIST DINE RASH FORM RASE BITE MIRE PAYS BRED KNAP DEEM DEED PUCE MELT TAPE PUCK DRAB DEFT FEAR FEAT DRAG MEME TAPS SICK BADE LOBE BEND JUTS SKEW PUBE OOZE PUBS SONG MELD VAIN NUKE VETS TARE FECK TART VALE TARP GAYS SKID BENT DIRE SKIM SKIN FILE DIRK LURE DRAT DRAW LODE KALE RAWS BRIE VEST THAT SIFT FEEL CUMS LOGO INNS TATS THAW FEES DABS PUGS MAIL VANS FIND MAIN DELI LURK MAGS FILM SKIS SKIT PLUG RAYS PLUM NUMB BAIL LUSH FEED HEAD ZITS HEAP HEAR HEAT DADS DIVE DELT SEAM MESS FRAT DREW BALK BALE BLAM BALD TAUT BLAH BETA MERE PHON RUBS BEST RUED NOES GUFF GLUE FIRE GLUG RUES DENS BALM SEAT PYRO SEAR FRAY NODE BANG BANE BAND CURT CURS MALE CURL HIKE CURE CURD MALT VATS FIST HEEL RUGS JIGS SMUG FREE CUSS MEWS SCAG KNOB SEED SCAB SEER LONE SCAM BANS SEEM SEEN SEEK LONG FELL STAG VAST STAB GLUT KHAN STAT SILK STAR JOSH SILT ZAGS CUTE SILO STAY LICH GYRE JEAN TUCK WICK FEND FITS NUTS SCAT SEES HINT BARK PUNK FELT SCAR KNOW AIDS DALE HEFT FADS KNOT BARE LIBS BARF PUNS BARD BARB MAPS TUBS PUNY WONT TYKE LICE SINS THIN DAMN POEM LIES BASK BASH LIEU BASE LORD MAST MASS RULE BARS LIFE MARE HIPS ZEST DANK PUPS BATH LIDS STEM BLIN STEW STET CZAR DAMS BAST LIED SIPS HISS FAIN FAIR MAUL TUGS GUNK JEER SACK LOTH WIGS NONE HELL HELM PURR SIRE MATS WORT GUMS WORM PUSH LEAK FEST HEMS ZAPS NICK BAWL LEAP ROCS LOVE WEAN MAWS WEAR RODE TYRE DAPS HELP HITS PUTS STIM ROBE DARN SPAR NIBS DARK RUNS DARE SPAM SITS SPAY SELL SPAT SADS LEAF LEAD HAGS DRUM SAGE ROES NORM SPED SAGS HENS HAFT SAFE WOVE DATE FAME LIKE GOES FLEA RUST NOSY LEES WEED LEER GUTS HERD SAID POND HERE WEES DYED NOTE LINE SAIL LINK FLEX WEEK PONG TUNE FANS WILD WILE LILT SNAG SPEW JABS GUST WILT NOSH RUSE OATS WEDS WILY LEEK HAIL JACK BUBO HUSH PATH GANT NEAP RAND LUGE OPTS DRYS JIVE PICS RANG RANT FARM REVS YEAS YEAH KISS WIND SERF IBIS WINE EASY SIZE WINK SERA MUCH LUFF HURT SURF GANG VEIN WINS EYES MINX MINT WHOM AXON TERM FATE VITE BUFF MUFF TURF TURD RAPT WEIR MEET SPIN EAVE KITE VISE GAPE GLEN EYED MINI IRKS MIND AIRS MINE DEAF DEAD STUB FAVE VIVE DEBT VEND GASH IAMB NINE JERK STUD GRUB STUN VENT SANG SAND NILS BIRD CLUB GARB NUDE CUFF PAWN TUSH WIRY DECO HEWN HEWS GARS FAUX TUSK ZEAL TANG OILY RATE HARD LEND SCUM HARM MACE NIPS BABE MISO LENS RIDE DING DUCT FIFE WADE AUNT TUTU LADY GATE WITH JURY DUDE FAWN HEYS RICH KEPT RICE WAGE MYTH SASH FAZE TEXT DEFY HATE ZINE GIFS GAWK RIFE APED RIFF ARID BYTE VERS VERT SHAH GIGA MEMO DUET LUNG DINK LUNE DINO GAVE SARS MITE DINT WEND JAMB HASH WAFT OINK EGGY KERN MADE RAVE MITT YIPS OOZY WENT VETO HAVE PINA TARS JAPE WAIF MAGE PINK MAGI PING ZIPS PINT WAIT SICS GHEE BUOY ANDS HIDE DIPS MEND WRIT INKS SIDE CITY KNEW WEPT TICS WHYS REAP NAES DISS THAN VANE MAID FEET DREG JARL BAHT WUSS SHEA LUTE JARS FINE MAIM PUFF BERM TASK UNIT GAZE DADA DIRT BERG FOXY LAKE BAIT CENT REAL YELP DISH RAZE YULE DISK PLUS MESA TIES RECS TIER HAZE BAKE LAND HEAL MESH MAKE LANE DIVA KEYS REDO MUSH SEAL MUSE FINK RUBE SHES BUSY FINS NUNS KNIT TIDY MERC BUSH RUBY PITA GINS PACT EELS PITH RIND MAMA NOEL MUTT NERD RINK DENY DAFT DUOS VASE DENT PITY VIBE FIRM META SEAS RUDE MUSK LEWD WAND METH WANE DUNG METE REEF GEEZ VIAL WANT GYMS THEN KART OAFS PISS MUTE CURB MOJO TEAS LARD FACT CUSP SCAD YAKS FRET SCAN RIPS FADE SMUT SUCH SECS FIRS SECT RUFF REFS MANE QUIT MANO YURT DAIS FISH TEAK VICE FACE OURS LATE FEMS DESK FUME VIER HUGE DUSK VIES VIEW RUIN GYRO FIVE OAKS TUBE WARS WART SWIG TUBA SING SINE WARM PUNT HUFF SINK SUET AIDE WASH THIS WARY REIN DEUS YEWS RACY LAVA HEIR LAVE TING MASH RITE TWIN MASK WAVE AKIN ANON HIRE CLEF NEXT TSAR LYES MICE TINT DEVS FENS YANG RISK DANG MARK NEWT AWAY ZETA FUNS MART DUTY MARS NEWS RACE WIDE TEEM PUSS GENS DEWS BAUD WHEN GUNS JEEZ YARD GAGA SACS GAGE WHEE RUNG RAFT FERN RUNE TYPE RENT CRUD GEMS TUFF MATE TINY MICS BIER MATH GIVE ITEM SIRS VEAL GENE PESO WIFE GAFF YOLK FUSE LAZE SULK FETA FUSS PANG REPS WEAK HIVE WEAL PANT LAZY DYAD BYES DART PUTT SITE WHET SPAS SELF RAGE SPAN STIR WHEY PUTZ RUNT FURS FAKE FURY NICE RAGU GNAW FESS KINS DRUG VINE NAVE SHUN DASH SAGA CIEL FANG MAZE SPEC MEAD GAIT SEND FEUD LUBE AILS DATA KINE KIND WEBS OARS GERM KINK TREE TACT SUNG SENT TACO TEND HAIR HERB EASE AIMS TENT RUTH TUNA DIET JADE HERO SWUM HERS OATH GUSH MEAL LILY ADDS ERST RAKE YAWL YAWN EARL RUSK RUSH ODDS JAVA SESH ZING APES MIDI PHIS AXED RAFF ZINC AVID ALMS THEY RENO GYNO RING ARIA ELSE QUID OPUS VARY FUZE JIFF NARY VERY EAUX IDEM WING SARI AWLS WAVY TUFT KERB DOJO THEE THUS VERA VERB VEIL THEM WINO APEX DEWY EVES TWEE ARKS WHOA AWED CRUX OWLY FETE NADA REPO MEGA AMID AGED ACED KNEE KATA TYPO WAXY MANA VISA OPES JINX QUIP AIRY INKY ANTS QUIZ RHEA KETO MENU MANY AERO EXES ZERO ANEW TREK FAVA RAZZ ONLY ARMS MAYO NANO NAVY ANUS VINY NAFF DEBE VINO ABED KAVA ACID UNIS MAXI TRUE CHUB KING DISC VIVA OFFS EWES OILS TWIG LEVA BABY TWIT TIFF TWAS ENDS HAZY MECH MACH RITZ MAKO MICA JIBE WATT AWRY OAKY EKED WREN OUCH APTS MAZY EDGY EKES DEMO NARC AXEL TWOS NANA ALAS ARMY ASKS ALES ABET KAKA AHEM AREA JAZZ ONUS ICED ZANY EDGE THUG EACH ALBS OWED CHUM THUD CHUG ICKY KANA IDES ELMS EXEC TECH OWES TAXI EVEN AXES AFRO AVES EVER ACTS ANTE PSIS OWLS AGES ACES ACER EDDY IDEA AGEE LEVY VEGA QUAD GNUS AWNS ODES ONES DITZ APPS ARTS FUZZ OPEN ALPS ORES DODO AWES ANTI AGRO ARCS EWER ARCH OWNS BUZZ ORBS ELFS BEVY JIZZ ABUT UREA OMEN FIZZ ICER AGUE ICES ASPS ELKS OWER OVER AMPS TAXA ELMY ETCH ALBA OVEN ORCS OXEN QUAY AVER AXIS ITCH OXER ORCA IMPS ALGA AMEN ARGH UMPS UMPH INCH AUGH'.split(' ');
+    const $ = id => document.getElementById(id);
+    const CAP = 100;
+    let routes = [], routeIndex = 0, truncated = false, activeWords = new Set(BASE_WORDS);
+    function parseWords(text) {
+      const tokens = text.trim().toUpperCase().split(/[\s,;]+/).filter(Boolean);
+      const bad = tokens.find(w => !/^[A-Z]{4}$/.test(w));
+      if (bad) throw new Error('Word list entries must each contain exactly four letters A–Z.');
+      return tokens;
+    }
+    function neighbors(word, words) {
+      const found = [];
+      for (let i = 0; i < 4; i++) for (let n = 65; n <= 90; n++) {
+        const letter = String.fromCharCode(n);
+        if (letter === word[i]) continue;
+        const candidate = word.slice(0, i) + letter + word.slice(i + 1);
+        if (words.has(candidate)) found.push(candidate);
+      }
+      return found;
+    }
+    function solveLadder(start, words, cap = CAP) {
+      if (!words.has(start)) throw new Error(start + ' is not in the selected word list. Check the spelling or add it under “Adjust the word list”.');
+      if (!words.has('POOP')) throw new Error('POOP is excluded. Remove it from “Words to avoid” to solve.');
+      const distance = new Map([['POOP', 0]]), queue = ['POOP'];
+      for (let head = 0; head < queue.length; head++) {
+        const word = queue[head];
+        for (const next of neighbors(word, words)) if (!distance.has(next)) {
+          distance.set(next, distance.get(word) + 1); queue.push(next);
+        }
+      }
+      if (!distance.has(start)) return {paths: [], truncated: false};
+      const paths = [], path = [start];
+      // Every descent reduces distance, so there are no cycles.
+      // An explicit stack also handles unusually long user-supplied ladders.
+      const stack = [{word: start, choices: null, index: 0}];
+      while (stack.length && paths.length <= cap) {
+        const frame = stack[stack.length - 1];
+        if (frame.word === 'POOP') {paths.push([...path]); stack.pop(); path.pop(); continue;}
+        if (!frame.choices) frame.choices = neighbors(frame.word, words).filter(w => distance.get(w) === distance.get(frame.word) - 1);
+        if (frame.index >= frame.choices.length) {stack.pop(); path.pop(); continue;}
+        const next = frame.choices[frame.index++]; path.push(next); stack.push({word: next, choices: null, index: 0});
+      }
+      return {paths: paths.slice(0, cap), truncated: paths.length > cap};
+    }
+    function showError(message, invalidStart = false) {
+      $('error').textContent = message; $('start').setAttribute('aria-invalid', String(invalidStart));
+      routes = []; $('ladder').replaceChildren(); $('result-bottom').hidden = true; $('moves').hidden = true;
+      $('empty').hidden = false; $('empty').textContent = 'Adjust the starting word or word list, then try again.';
+      $('result-title').textContent = 'No solution to show'; $('result-subtitle').textContent = 'Check the message beside the input.';
+    }
+    function renderRoute() {
+      const path = routes[routeIndex];
+      $('ladder').replaceChildren(); $('empty').hidden = true; $('moves').hidden = false; $('result-bottom').hidden = false;
+      $('result-title').textContent = path.length === 1 ? 'Already at the finish!' : 'Your shortest path';
+      $('result-subtitle').textContent = path[0] + ' → POOP · Fewest moves in this word list';
+      $('moves').textContent = (path.length - 1) + (path.length === 2 ? ' move' : ' moves');
+      path.forEach((word, i) => {
+        const row = document.createElement('li'); row.className = 'rung';
+        const index = document.createElement('span'); index.className = 'step'; index.textContent = String(i).padStart(2, '0'); index.setAttribute('aria-hidden', 'true');
+        const tiles = document.createElement('span'); tiles.className = 'tiles'; tiles.setAttribute('aria-hidden', 'true');
+        let changed = -1;
+        [...word].forEach((letter, j) => {const tile = document.createElement('span'); tile.className = 'tile'; if (i && letter !== path[i - 1][j]) {tile.classList.add('changed'); changed = j;} tile.textContent = letter; tiles.append(tile);});
+        const note = document.createElement('span'); note.className = 'change'; note.setAttribute('aria-hidden', 'true');
+        if (changed >= 0) {const mark = document.createElement('b'); mark.textContent = path[i - 1][changed] + ' → ' + word[changed]; note.append(mark);}
+        else note.textContent = path.length === 1 ? 'Finish' : 'Start';
+        row.setAttribute('aria-label', (i ? 'Move ' + i : 'Start') + ': ' + word + (changed >= 0 ? '. Letter ' + (changed + 1) + ': ' + path[i - 1][changed] + ' changes to ' + word[changed] : ''));
+        row.append(index, tiles, note); $('ladder').append(row);
+      });
+      $('route-label').textContent = 'Route ' + (routeIndex + 1) + ' of ' + routes.length + (truncated ? ' shown (more exist)' : routes.length === 1 ? '' : ' shortest routes');
+      $('prev').disabled = routeIndex === 0; $('next').disabled = routeIndex === routes.length - 1;
+      $('copy').textContent = 'Copy this path'; $('copy-manual').hidden = true;
+    }
+    function runSolve() {
+      $('error').textContent = ''; $('start').setAttribute('aria-invalid', 'false');
+      const start = $('start').value.trim().toUpperCase(); $('start').value = start;
+      if (!/^[A-Z]{4}$/.test(start)) {showError('Enter exactly four letters A–Z, such as BARN.', true); return;}
+      try {
+        const words = new Set([...BASE_WORDS, ...parseWords($('added').value)]);
+        parseWords($('excluded').value).forEach(word => words.delete(word));
+        activeWords = words; $('word-count').textContent = words.size.toLocaleString();
+        const result = solveLadder(start, words);
+        if (!result.paths.length) {showError('No route from ' + start + ' to POOP exists in the selected word list. Try removing exclusions or adding accepted words.'); return;}
+        routes = result.paths; truncated = result.truncated; routeIndex = 0; renderRoute();
+      } catch (error) {showError(error.message);}
+    }
+    $('solve-form').addEventListener('submit', event => {event.preventDefault(); runSolve();});
+    document.querySelectorAll('[data-word]').forEach(button => button.addEventListener('click', () => {$('start').value = button.dataset.word; runSolve();}));
+    $('prev').addEventListener('click', () => {if (routeIndex > 0) {routeIndex--; renderRoute();} });
+    $('next').addEventListener('click', () => {if (routeIndex < routes.length - 1) {routeIndex++; renderRoute();} });
+    $('reset').addEventListener('click', () => {$('added').value = ''; $('excluded').value = ''; runSolve();});
+    $('copy').addEventListener('click', async () => {
+      if (!routes.length) return;
+      const text = routes[routeIndex].join(' → ');
+      try {if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable'); await navigator.clipboard.writeText(text); $('copy').textContent = 'Copied!';}
+      catch {const field = $('copy-manual'); field.value = text; field.hidden = false; field.focus(); field.select(); $('copy').textContent = 'Select and copy the path below';}
+    });
+    runSolve();
+    if (document.modelContext?.registerTool) {
+      try {Promise.resolve(document.modelContext.registerTool({name: 'solve_poople', description: 'Show shortest routes from a four-letter word to POOP using the page’s selected dictionary.', inputSchema: {type: 'object', properties: {start: {type: 'string', pattern: '^[A-Za-z]{4}$'}}, required: ['start'], additionalProperties: false}, annotations: {readOnlyHint: false}, execute(input) {if (!input || typeof input.start !== 'string' || !/^[a-z]{4}$/i.test(input.start)) throw new Error('Provide a four-letter start word.'); $('start').value = input.start; runSolve(); return {paths: routes, moves: routes.length ? routes[0].length - 1 : null, error: $('error').textContent};} })).catch(() => { });} catch { }
+    }
+  </script>
 </body>
+
 </html>
