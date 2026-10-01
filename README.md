@@ -2,7 +2,13 @@
 
 A self-contained webpage that finds the fewest one-letter changes needed to turn a four-letter word into **POOP**.
 
-Open [poople-solver.html](poople-solver.html) in a browser with JavaScript enabled. No installation, server, account, or internet connection is required. All styling, code, and dictionary data are embedded in the HTML file.
+## Live demo
+
+Try Wordwise directly in your browser:
+
+https://danielnjs.github.io/poople-solver/
+
+Open [index.html](index.html) in a browser with JavaScript enabled. No installation, server, account, or internet connection is required. All styling, code, and dictionary data are embedded in the HTML file.
 
 ## How to use it
 
